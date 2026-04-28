@@ -55,3 +55,31 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     messageBox.style.color = "green";
     messageBox.innerText = "Sukces: Formularz został wypełniony poprawnie!";
 });
+
+
+// --- ZADANIE 6: Pobieranie danych JSON (s77448) ---
+function loadData() {
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            
+            let skillsList = document.getElementById('skills-list');
+            data.umiejetnosci.forEach(skill => {
+                let li = document.createElement('li');
+                li.innerText = skill;
+                skillsList.appendChild(li);
+            });
+
+            
+            let projectsList = document.getElementById('projects-list');
+            data.projekty.forEach(project => {
+                let li = document.createElement('li');
+                li.innerText = project;
+                projectsList.appendChild(li);
+            });
+        })
+        .catch(error => console.error('Błąd:', error));
+}
+
+
+loadData();
