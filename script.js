@@ -81,5 +81,60 @@ function loadData() {
         .catch(error => console.error('Błąd:', error));
 }
 
-
 loadData();
+
+
+// --- ZADANIE 7: Local Storage (s77448) ---
+
+// Zczytywanie notatek
+function loadNotes() {
+    let notesList = document.getElementById("notes-list");
+    notesList.innerHTML = ""; 
+    
+    let savedNotes = JSON.parse(localStorage.getItem("myNotes")) || [];
+    
+    savedNotes.forEach((note, index) => {
+        let li = document.createElement("li");
+        li.innerText = note + " ";
+        
+        let deleteBtn = document.createElement("button");
+        deleteBtn.innerText = "Usuń";
+        deleteBtn.style.marginLeft = "10px";
+        deleteBtn.style.cursor = "pointer";
+        
+        deleteBtn.onclick = function() {
+            deleteNote(index);
+        };
+        
+        li.appendChild(deleteBtn);
+        notesList.appendChild(li);
+    });
+}
+
+// Dodawanie notatki
+function addNote() {
+    let input = document.getElementById("note-input");
+    let newNote = input.value.trim();
+    
+    if (newNote === "") return; 
+    
+    let savedNotes = JSON.parse(localStorage.getItem("myNotes")) || [];
+    savedNotes.push(newNote); 
+    
+    localStorage.setItem("myNotes", JSON.stringify(savedNotes)); 
+    
+    input.value = ""; 
+    loadNotes(); 
+}
+
+// Usuwanie notatki
+function deleteNote(index) {
+    let savedNotes = JSON.parse(localStorage.getItem("myNotes")) || [];
+    savedNotes.splice(index, 1); 
+    
+    localStorage.setItem("myNotes", JSON.stringify(savedNotes));
+    loadNotes(); 
+}
+
+// Uruchomienie przy starcie
+loadNotes();
