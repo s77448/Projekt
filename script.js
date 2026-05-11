@@ -69,24 +69,19 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     let backendURL = "https://webhook.site/4c81c1fa-c4bb-48ad-a3db-b9d1a085d2ec";
 
    
-    fetch(backendURL, {
+fetch(backendURL, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
         body: JSON.stringify(formData) 
     })
     .then(response => {
         messageBox.style.color = "green";
         messageBox.innerText = "Sukces: Dane zostały wysłane na serwer!";
-        document.getElementById("contact-form").reset(); 
+        document.getElementById("contact-form").reset(); // Очищаємо форму
     })
     .catch(error => {
         messageBox.style.color = "red";
         messageBox.innerText = "Błąd połączenia z serwerem.";
     });
-});
-
 // --- ZADANIE 6: Pobieranie danych JSON ---
 function loadData() {
     fetch('data.json')
