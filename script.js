@@ -22,10 +22,9 @@ function toggleSection() {
     }
 }
 
-// --- ZADANIE 5: Walidacja formularza kontaktowego ---
+// --- ZADANIE 5 i 8: Walidacja formularza i wysyłanie na serwer (POST) ---
 
 document.getElementById("contact-form").addEventListener("submit", function(event) {
-    
     event.preventDefault(); 
 
     let imie = document.getElementById("imie").value.trim();
@@ -35,6 +34,7 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     
     let messageBox = document.getElementById("form-message");
     messageBox.style.color = "red"; 
+
 
     if (imie === "" || nazwisko === "" || email === "" || wiadomosc === "") {
         messageBox.innerText = "Błąd: Wszystkie pola są wymagane!";
@@ -52,43 +52,73 @@ document.getElementById("contact-form").addEventListener("submit", function(even
         return;
     }
 
-    messageBox.style.color = "green";
-    messageBox.innerText = "Sukces: Formularz został wypełniony poprawnie!";
+    // --- ZADANIE 8: Wysłanie danych metodą POST ---
+    
+    messageBox.style.color = "blue";
+    messageBox.innerText = "Wysyłanie na serwer...";
+
+   
+    let formData = {
+        imie: imie,
+        nazwisko: nazwisko,
+        email: email,
+        wiadomosc: wiadomosc
+    };
+
+    // webhook.site
+    let backendURL = "https://webhook.site/4c81c1fa-c4bb-48ad-a3db-b9d1a085d2ec";
+
+   
+    fetch(backendURL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData) 
+    })
+    .then(response => {
+        messageBox.style.color = "green";
+        messageBox.innerText = "Sukces: Dane zostały wysłane na serwer!";
+        document.getElementById("contact-form").reset(); 
+    })
+    .catch(error => {
+        messageBox.style.color = "red";
+        messageBox.innerText = "Błąd połączenia z serwerem.";
+    });
 });
 
-
-// --- ZADANIE 6: Pobieranie danych JSON (s77448) ---
+// --- ZADANIE 6: Pobieranie danych JSON ---
 function loadData() {
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            
             let skillsList = document.getElementById('skills-list');
-            data.umiejetnosci.forEach(skill => {
-                let li = document.createElement('li');
-                li.innerText = skill;
-                skillsList.appendChild(li);
-            });
+            if(skillsList) {
+                data.umiejetnosci.forEach(skill => {
+                    let li = document.createElement('li');
+                    li.innerText = skill;
+                    skillsList.appendChild(li);
+                });
+            }
 
-            
             let projectsList = document.getElementById('projects-list');
-            data.projekty.forEach(project => {
-                let li = document.createElement('li');
-                li.innerText = project;
-                projectsList.appendChild(li);
-            });
+            if(projectsList) {
+                data.projekty.forEach(project => {
+                    let li = document.createElement('li');
+                    li.innerText = project;
+                    projectsList.appendChild(li);
+                });
+            }
         })
         .catch(error => console.error('Błąd:', error));
 }
-
 loadData();
 
 
-// --- ZADANIE 7: Local Storage (s77448) ---
-
-// Zczytywanie notatek
+// --- ZADANIE 7: Local Storage ---
 function loadNotes() {
     let notesList = document.getElementById("notes-list");
+    if(!notesList) return;
     notesList.innerHTML = ""; 
     
     let savedNotes = JSON.parse(localStorage.getItem("myNotes")) || [];
@@ -111,7 +141,6 @@ function loadNotes() {
     });
 }
 
-// Dodawanie notatki
 function addNote() {
     let input = document.getElementById("note-input");
     let newNote = input.value.trim();
@@ -127,7 +156,6 @@ function addNote() {
     loadNotes(); 
 }
 
-// Usuwanie notatki
 function deleteNote(index) {
     let savedNotes = JSON.parse(localStorage.getItem("myNotes")) || [];
     savedNotes.splice(index, 1); 
@@ -136,5 +164,4 @@ function deleteNote(index) {
     loadNotes(); 
 }
 
-// Uruchomienie przy starcie
 loadNotes();
