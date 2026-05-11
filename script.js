@@ -35,7 +35,6 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     let messageBox = document.getElementById("form-message");
     messageBox.style.color = "red"; 
 
-
     if (imie === "" || nazwisko === "" || email === "" || wiadomosc === "") {
         messageBox.innerText = "Błąd: Wszystkie pola są wymagane!";
         return; 
@@ -57,7 +56,6 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     messageBox.style.color = "blue";
     messageBox.innerText = "Wysyłanie na serwer...";
 
-   
     let formData = {
         imie: imie,
         nazwisko: nazwisko,
@@ -68,8 +66,7 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     // webhook.site
     let backendURL = "https://webhook.site/4c81c1fa-c4bb-48ad-a3db-b9d1a085d2ec";
 
-   
-fetch(backendURL, {
+    fetch(backendURL, {
         method: "POST",
         body: JSON.stringify(formData) 
     })
@@ -82,6 +79,8 @@ fetch(backendURL, {
         messageBox.style.color = "red";
         messageBox.innerText = "Błąd połączenia z serwerem.";
     });
+}); // <--- ОСЬ ЦІ ДУЖКИ БУЛИ ЗАГУБЛЕНІ!
+
 // --- ZADANIE 6: Pobieranie danych JSON ---
 function loadData() {
     fetch('data.json')
